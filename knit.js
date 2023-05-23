@@ -10,6 +10,13 @@ const getAllIndicies = (string, substring) => {
   return indicies;
 };
 
+const makeNewString = (string, indexArray) => {
+  indexArray.forEach((index) => {
+    string = string.slice(0, index) + "__-_-__" + string.slice(index + 7);
+  });
+  return string;
+};
+
 const parseFile = (fileName) => {
   const data = fs.readFileSync(fileName, "utf8");
   const lines = data.split("\n");
@@ -27,16 +34,17 @@ const parseFile = (fileName) => {
         // const increment = lines[i + 4]?.slice(0, 5) === "FRNT" ? 1 : 2;
         const increment = 3;
         // frnt1
+        const indicies = getAllIndicies(lines[i + increment], "__-_-__");
         const newFrnt1 = lines[i + increment].replaceAll("__-_-__", "___-___");
         lines[i + increment] = newFrnt1;
         // rear1
         const newRear1 = lines[i + 5].replaceAll("__-_-__", "___-___");
         lines[i + 5] = newRear1;
         // frnt2
-        const newFrnt2 = lines[i + 13].replaceAll("___-___", "__-_-__");
+        const newFrnt2 = makeNewString(lines[i + 13], indicies);
         lines[i + 13] = newFrnt2;
         // rear2
-        const newRear2 = lines[i + 15].replaceAll("___-___", "__-_-__");
+        const newRear2 = makeNewString(lines[i + 15], indicies);
         lines[i + 15] = newRear2;
       }
     }
