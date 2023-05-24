@@ -1,4 +1,14 @@
-const fs = require("fs");
+const fs = require("node:fs");
+const process = require("node:process");
+
+const [_, _1, fromFile, toFile] = process.argv;
+
+if (!fromFile || !toFile) {
+  console.error(
+    "knit.js must be called with two parameters. For example: node knit.js <file_to_read> <file_to_write>"
+  );
+  process.exit();
+}
 
 const getAllIndicies = (string, substring) => {
   let indicies = [];
@@ -31,7 +41,6 @@ const parseFile = (fileName) => {
       const [number] = lines[i].split(" ").slice(-1);
       if (lines[i + 11]?.includes(number)) {
         // we found a match, modify the lines accordingly
-        // const increment = lines[i + 4]?.slice(0, 5) === "FRNT" ? 1 : 2;
         const increment = 3;
         // frnt1
         const indicies = getAllIndicies(lines[i + increment], "__-_-__");
@@ -51,7 +60,7 @@ const parseFile = (fileName) => {
   }
 
   // Write the modified lines back to the file.
-  fs.writeFileSync(fileName + "-output", lines.join("\n"));
+  fs.writeFileSync(toFile, lines.join("\n"));
 };
 
-parseFile("./sample file.kc");
+parseFile(fromFile);
